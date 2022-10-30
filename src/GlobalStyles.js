@@ -14,7 +14,7 @@ body{
     padding:0;
     overflow-x:hidden;
     line-height: 1.5 !important;
-    font-family: 'Roboto Slab', serif;
+    font-family: 'Poppins', sans-serif;
 }
 `;
 
