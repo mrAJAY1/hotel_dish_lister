@@ -138,25 +138,27 @@ function CategoryItems({ swipe }) {
               <h4 className='title'>{dish.dish_name}</h4>
               <h5>{`${dish.dish_currency}   ${dish.dish_price}`}</h5>
               <p>{dish.dish_description}</p>
-              <div className='buttons'>
-                <button
-                  type='button'
-                  onClick={() => {
-                    dispatch(decrementCount(dish.dish_id));
-                  }}
-                >
-                  <BiMinus />
-                </button>
-                <p>{getCartCount(dish.dish_id)}</p>
-                <button
-                  type='button'
-                  onClick={() => {
-                    dispatch(incrementCount(dish.dish_id));
-                  }}
-                >
-                  <BiPlus />
-                </button>
-              </div>
+              {dish.dish_Availability && (
+                <div className='buttons'>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      dispatch(decrementCount(dish.dish_id));
+                    }}
+                  >
+                    <BiMinus />
+                  </button>
+                  <p>{getCartCount(dish.dish_id)}</p>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      dispatch(incrementCount(dish.dish_id));
+                    }}
+                  >
+                    <BiPlus />
+                  </button>
+                </div>
+              )}
               {dish.addonCat.length !== 0 && (
                 <p className='customisation'>costumisation available</p>
               )}
