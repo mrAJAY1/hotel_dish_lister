@@ -1,9 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { BiFoodTag, BiPlus, BiMinus } from "react-icons/bi";
+import { motion } from "framer-motion";
 import { decrementCount, incrementCount } from "../features/Cart";
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   width: 100%;
   min-height: 120px;
   display: flex;
@@ -106,7 +107,7 @@ const Image = styled.div`
   }
 `;
 
-function CategoryItems() {
+function CategoryItems({ swipe }) {
   const { categoryDishes } = useSelector((store) => store.global);
   const cart = useSelector((store) => store.cart);
   const dispatch = useDispatch();
@@ -121,7 +122,14 @@ function CategoryItems() {
   if (categoryDishes.length !== 0) {
     return categoryDishes.map((dish) => {
       return (
-        <Container key={dish.dish_id}>
+        <Container
+          initial={
+            swipe === 1 ? { x: window.innerWidth } : { x: -window.innerWidth }
+          }
+          animate={{ x: 0 }}
+          transition={{ duration: 0.5 }}
+          key={dish.dish_id}
+        >
           <Details>
             <div className='foodTag'>
               <BiFoodTag fill={`${dish.dish_Type === 2 ? "green" : "red"}`} />

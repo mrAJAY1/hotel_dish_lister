@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { setCurrentDishes, setSelected } from "../features/globalSlice";
@@ -15,8 +15,13 @@ const Container = styled.div`
     height: 10px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #efefef;
+    background-color: transparent;
     border-radius: 30px;
+  }
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      background-color: #efefef;
+    }
   }
 `;
 
@@ -25,24 +30,33 @@ const TitleContainer = styled.div`
   align-items: flex-end;
   justify-content: center;
   position: relative;
-  color: ${(p) => p.theme.textSecondary};
-  width: 250px;
+  @media (max-width: 720px) {
+    width: 150px;
+    width: 250px;
+  }
   height: 100%;
   font-size: 1.5ch;
+  @media (min-width: 720px) {
+    width: 30vw;
+    font-size: calc(0.2rem + 0.8vw);
+  }
   font-weight: 500;
   padding-bottom: 10px;
-  &.active {
-    color: ${(p) => p.theme.textWarning};
-  }
-  &.active::after {
+  &::after {
+    transition: all 0.5s ease;
     content: "";
     display: block;
     position: absolute;
     height: 2px;
-    width: 100%;
+    width: ${(p) => (p.active ? "100%" : "0%")};
+    left: 0;
     bottom: -2px;
-    border-bottom: 2px solid ${(p) => p.theme.textWarning};
+    border-bottom: ${(p) =>
+      p.active ? `2px solid ${p.theme.textWarning}` : "2px solid transparent"};
   }
+  transition: all 0.5s ease;
+  color: ${(p) => (p.active ? p.theme.textWarning : p.theme.textSecondary)};
+
   user-select: none;
   &:hover {
     cursor: pointer;
@@ -58,25 +72,40 @@ const Main = styled.div`
 
 function CategoryBar() {
   const { hotelData, selected } = useSelector((store) => store.global);
+  const ref = useRef(null);
+  const mainRef = useRef(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if ((!selected.current.id || !selected.current.index) && hotelData[0])
       dispatch(setSelected({ index: 0, id: hotelData[0]?.menu_category_id }));
   }, [hotelData]);
+
   useEffect(() => {
     dispatch(setCurrentDishes(selected.current.id));
+    if (ref.current?.offsetLeft) {
+      mainRef.current.scrollTo({
+        left: ref.current.offsetLeft - 50,
+        top: 0,
+        behavior: "smooth",
+      });
+    } else {
+      mainRef.current.scrollTo({
+        left: 0,
+        top: 0,
+        behavior: "smooth",
+      });
+    }
   }, [selected]);
 
   return (
-    <Container>
+    <Container ref={mainRef}>
       <Main>
         {hotelData?.map((item, index) => {
           return (
             <TitleContainer
-              className={
-                selected.current.id === item.menu_category_id && "active"
-              }
+              ref={selected.current.id === item.menu_category_id ? ref : null}
+              active={selected.current.id === item.menu_category_id}
               key={item.menu_category_id}
               onClick={() =>
                 selected.current.id !== item.menu_category_id &&

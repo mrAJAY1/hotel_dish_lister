@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSwipeable } from "react-swipeable";
 import styled from "styled-components";
@@ -8,13 +9,16 @@ import CategoryItems from "./CategoryItems";
 
 const Container = styled.div`
   width: 100%;
+  min-height: 100vh;
 `;
 
 function CategorySlide() {
   const { hotelData, selected } = useSelector((store) => store.global);
+  const [swipe, setSwipe] = useState(1);
   const dispatch = useDispatch();
   const handlers = useSwipeable({
     onSwipedLeft: () => {
+      setSwipe(1);
       dispatch(
         setSelected({
           id: hotelData[selected.nextIndex].menu_category_id,
@@ -24,6 +28,7 @@ function CategorySlide() {
     },
 
     onSwipedRight: () => {
+      setSwipe(2);
       dispatch(
         setSelected({
           id: hotelData[selected.prevIndex].menu_category_id,
@@ -37,7 +42,7 @@ function CategorySlide() {
   });
   return (
     <Container {...handlers}>
-      <CategoryItems />
+      <CategoryItems swipe={swipe} />
     </Container>
   );
 }
