@@ -8,7 +8,14 @@ import CategoryBar from "./components/CategoryBar";
 import { getData } from "./features/globalSlice";
 import CategorySlide from "./components/CategorySlide";
 
-const Container = styled.div``;
+const Container = styled.div`
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background-color: #fff;
+  }
+`;
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -17,8 +24,10 @@ function App() {
   return (
     <ThemeProvider theme={LightTheme}>
       <Container>
-        <NavBar />
-        <CategoryBar />
+        <header>
+          <NavBar />
+          <CategoryBar />
+        </header>
         <CategorySlide />
       </Container>
     </ThemeProvider>
