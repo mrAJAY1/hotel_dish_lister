@@ -61,23 +61,31 @@ function CategoryBar() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!selected) dispatch(setSelected(hotelData[0]?.menu_category_id));
+    if ((!selected.current.id || !selected.current.index) && hotelData[0])
+      dispatch(setSelected({ index: 0, id: hotelData[0]?.menu_category_id }));
   }, [hotelData]);
   useEffect(() => {
-    dispatch(setCurrentDishes(selected));
+    dispatch(setCurrentDishes(selected.current.id));
   }, [selected]);
 
   return (
     <Container>
       <Main>
-        {hotelData?.map((item) => {
+        {hotelData?.map((item, index) => {
           return (
             <TitleContainer
-              className={selected === item.menu_category_id && "active"}
+              className={
+                selected.current.id === item.menu_category_id && "active"
+              }
               key={item.menu_category_id}
               onClick={() =>
-                selected !== item.menu_category_id &&
-                dispatch(setSelected(item.menu_category_id))
+                selected.current.id !== item.menu_category_id &&
+                dispatch(
+                  setSelected({
+                    id: item.menu_category_id,
+                    index,
+                  })
+                )
               }
             >
               <p>{item.menu_category}</p>

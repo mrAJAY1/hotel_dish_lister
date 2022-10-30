@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useSwipeable } from "react-swipeable";
 import styled from "styled-components";
+import { setSelected } from "../features/globalSlice";
 
 import CategoryItems from "./CategoryItems";
 
@@ -11,10 +12,25 @@ const Container = styled.div`
 
 function CategorySlide() {
   const { hotelData, selected } = useSelector((store) => store.global);
-
+  const dispatch = useDispatch();
   const handlers = useSwipeable({
-    onSwipedLeft: () => console.log("rightSwipe"),
-    onSwipedRight: () => console.log("leftSwipe"),
+    onSwipedLeft: () => {
+      dispatch(
+        setSelected({
+          id: hotelData[selected.nextIndex].menu_category_id,
+          index: selected.nextIndex,
+        })
+      );
+    },
+
+    onSwipedRight: () => {
+      dispatch(
+        setSelected({
+          id: hotelData[selected.prevIndex].menu_category_id,
+          index: selected.prevIndex,
+        })
+      );
+    },
     swipeDuration: 500,
     preventScrollOnSwipe: true,
     trackMouse: true,

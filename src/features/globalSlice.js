@@ -4,7 +4,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const url = "https://run.mocky.io/v3/a67edc87-49c7-4822-9cb4-e2ef94cb3099";
 const initialState = {
   isLoading: false,
-  selected: null,
+  selected: {
+    current: { id: null, index: null },
+    nextIndex: null,
+    prevIndex: null,
+  },
   hotelNavState: {},
   hotelData: [],
   menuCategory: [],
@@ -38,7 +42,10 @@ const globalSlice = createSlice({
     },
     setSelected: (state, { payload }) => {
       if (payload) {
-        state.selected = payload;
+        state.selected.current = { index: payload.index, id: payload.id };
+        state.selected.prevIndex = payload.index > 0 ? payload.index - 1 : 0;
+
+        state.selected.nextIndex = payload.index + 1;
       }
     },
   },
